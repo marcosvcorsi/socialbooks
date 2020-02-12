@@ -1,6 +1,5 @@
 package com.algaworks.socialbooks.models;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
