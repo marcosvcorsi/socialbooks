@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.algaworks.socialbooks.models.Comentario;
 import com.algaworks.socialbooks.models.Livro;
 import com.algaworks.socialbooks.services.LivroService;
 
@@ -64,5 +65,21 @@ public class LivroController {
 		livro = livroService.update(livro);
 		
 		return ResponseEntity.ok(livro);
+	}
+	
+	@PostMapping("{id}/comentarios")
+	public ResponseEntity<Comentario> addComment(@PathVariable("id") Long livroId, @RequestBody Comentario comentario) {
+		comentario = livroService.saveComentario(livroId, comentario);
+	
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+		
+		return ResponseEntity.created(uri).body(comentario);
+	}
+	
+	@GetMapping("{id}/comentarios")
+	public ResponseEntity<List<Comentario>> listComments(@PathVariable("id") Long livroId) {
+		List<Comentario> comentarioList = livroService.listComentarios(livroId);
+		
+		return ResponseEntity.ok(comentarioList);
 	}
 }
