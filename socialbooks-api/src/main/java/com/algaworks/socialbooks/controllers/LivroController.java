@@ -2,8 +2,13 @@ package com.algaworks.socialbooks.controllers;
 
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +39,7 @@ public class LivroController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Livro> save(@RequestBody Livro livro) {
+	public ResponseEntity<Livro> save(@Valid @RequestBody Livro livro) {
 		livro = livroService.save(livro);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -48,7 +53,9 @@ public class LivroController {
 	public ResponseEntity<Livro> get(@PathVariable Long id) {
 		Livro livro =  livroService.findById(id);
 		
-		return ResponseEntity.ok(livro);
+		CacheControl cacheControl = CacheControl.maxAge(20, TimeUnit.SECONDS);
+		
+		return ResponseEntity.ok().cacheControl(cacheControl).body(livro);
 	}
 	
 	@DeleteMapping("{id}")

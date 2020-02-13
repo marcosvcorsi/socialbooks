@@ -1,16 +1,15 @@
 package com.algaworks.socialbooks.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,24 +23,23 @@ import lombok.Setter;
 @Setter
 @JsonInclude(Include.NON_NULL)
 @Entity
-public class Comentario {
+public class Autor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotEmpty(message = "Campo texto não pode ser vazio!")
-	@Size(max = 1500, message = "O comentário não pode ter mais de 1500 carateres")
-	private String texto;
+	@NotEmpty(message = "Campo nome não pode ser vazio!")
+	private String nome;
 	
-	@NotEmpty(message = "Campo usuário não pode ser vazio!")
-	private String usuario;
+	@NotNull(message = "Campo nascimento é obrigatório!")
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private LocalDate nascimento;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-	private LocalDateTime data;
+	private String nacionalidade;
 	
+
+	@OneToMany(mappedBy = "autor")
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "LIVRO_ID")
-	private Livro livro;
+	private List<Livro> livros;
 }
